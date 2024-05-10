@@ -34,11 +34,11 @@ if sys.platform == "darwin":
 
 # Work around for windows missing dll's
 MISSING_CRYPTOLIB_DLL=None
-DATA_FILES=[]
+
 if sys.platform in ['win32', 'cygwin', 'msys']:
     MISSING_CRYPTOLIB_DLL = os.environ.get('CRYPTOLIB_DLL')
     if MISSING_CRYPTOLIB_DLL:
-        DATA_FILES.append(('lib/site-packages', [MISSING_CRYPTOLIB_DLL]))
+        shutil.copy(MISSING_CRYPTOLIB_DLL, "sqlcipher3/")
 def quote_argument(arg):
     q = '\\"' if sys.platform == 'win32' and sys.version_info < (3, 8) else '"'
     return q + arg + q
@@ -185,7 +185,7 @@ def get_setup_args():
             "build_static": AmalgationLibSqliteBuilder,
             "build_ext": SystemLibSqliteBuilder
         },
-        data_files=DATA_FILES
+        package_data={PACKAGE_NAME: ['*.dll']}
     )
 
 
